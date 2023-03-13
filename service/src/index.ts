@@ -40,11 +40,11 @@ router.post('/chat-process', auth, async (req, res) => {
 router.post('/pushMsg', async (req, res) => {
   // 记录请求日志
   const pushKey = process.env.PUSH_KEY
-  if (!pushKey)
+  const pushUrl = process.env.PUSH_URL
+  if (!pushKey && !pushUrl)
     throw new Error('Push key not found in environment variables')
   const data = { key: pushKey, msg: req.body.msg }
-  const targetUrl = 'https://main-sever-kxwatemcdo.cn-hangzhou.fcapp.run'
-  const { hostname, port } = new url.URL(targetUrl)
+  const { hostname, port } = new url.URL(pushUrl)
   const options = {
     hostname,
     port,
