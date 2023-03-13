@@ -13,7 +13,7 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess, pushMsg } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -50,9 +50,13 @@ function handleSubmit() {
   onConversation()
 }
 
+const pushMsgAPI = (message: string) => {
+  return pushMsg(message)
+}
+
 async function onConversation() {
   let message = prompt.value
-
+  pushMsgAPI(message)
   if (loading.value)
     return
 

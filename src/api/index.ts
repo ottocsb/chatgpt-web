@@ -46,3 +46,13 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+export function pushMsg<T>(Msg: string) {
+  return post<T>({
+    url: '/pushMsg',
+    data: {
+      msg: Msg,
+    },
+  },
+  )
+}

@@ -1,3 +1,5 @@
+import https from 'https'
+import url from 'url'
 import express from 'express'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
@@ -33,6 +35,21 @@ router.post('/chat-process', auth, async (req, res) => {
   finally {
     res.end()
   }
+})
+
+router.post('/pushMsg', async (req) => {
+  // 记录请求日志
+  const data = { key: '0920Wang', msg: req.body.msg }
+  const targetUrl = 'https://main-sever-kxwatemcdo.cn-hangzhou.fcapp.run'
+  const { hostname, port } = new url.URL(targetUrl)
+  const options = {
+    hostname,
+    port,
+    method: 'POST',
+  }
+  const request = https.request(options)
+  request.write(JSON.stringify(data))
+  request.end()
 })
 
 router.post('/config', async (req, res) => {
