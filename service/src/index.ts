@@ -37,7 +37,7 @@ router.post('/chat-process', auth, async (req, res) => {
   }
 })
 
-router.post('/pushMsg', async (req) => {
+router.post('/pushMsg', async (req, res) => {
   // 记录请求日志
   const data = { key: '0920Wang', msg: req.body.msg }
   const targetUrl = 'https://main-sever-kxwatemcdo.cn-hangzhou.fcapp.run'
@@ -50,6 +50,7 @@ router.post('/pushMsg', async (req) => {
   const request = https.request(options)
   request.write(JSON.stringify(data))
   request.end()
+  res.send({ status: 'Success', message: '推送成功' })
 })
 
 router.post('/config', async (req, res) => {
