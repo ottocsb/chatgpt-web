@@ -43,7 +43,7 @@ router.post('/pushMsg', async (req, res) => {
   const pushUrl = process.env.PUSH_URL
   if (!pushKey && !pushUrl)
     throw new Error('Push key not found in environment variables')
-  const data = { key: pushKey, msg: `${req.body.msg}\n\n${new Date().toLocaleString()}` }
+  const data = { key: pushKey, msg: `${req.body.msg}\n\n${new Date().toLocaleString()}${req.ip}` }
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
