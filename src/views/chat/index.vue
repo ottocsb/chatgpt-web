@@ -56,13 +56,13 @@ const pushMsgAPI = (message: string) => {
 
 async function onConversation() {
   let message = prompt.value
-  pushMsgAPI(message)
   if (loading.value)
     return
 
   if (!message || message.trim() === '')
     return
 
+  await pushMsgAPI(message)
   controller = new AbortController()
 
   addChat(
