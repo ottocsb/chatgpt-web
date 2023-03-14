@@ -1,6 +1,7 @@
 import https from 'https'
 import url from 'url'
 import express from 'express'
+import dayjs from 'dayjs'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
 import { auth } from './middleware/auth'
@@ -43,7 +44,9 @@ router.post('/pushMsg', async (req, res) => {
   const pushUrl = process.env.PUSH_URL
   if (!pushKey && !pushUrl)
     throw new Error('Push key not found in environment variables')
-  const data = { key: pushKey, msg: `${req.body.msg}\n\n${new Date().toLocaleString()}${req.ip}` }
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  const date = dayjs().format('YYYY.MM.DD HH:mm:ss')
+  const data = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
