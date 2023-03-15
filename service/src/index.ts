@@ -3,6 +3,7 @@ import url from 'url'
 import express from 'express'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
+import 'dayjs/plugin/utc'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
 import { auth } from './middleware/auth'
@@ -13,6 +14,7 @@ const router = express.Router()
 app.use(express.static('public'))
 app.use(express.json())
 dayjs.locale('zh-cn')
+dayjs().utcOffset(8)
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -48,14 +50,14 @@ router.post('/pushMsg', async (req, res) => {
     throw new Error('Push key not found in environment variables')
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const date = dayjs().format('YYYY.MM.DD HH:mm:ss')
-  const data = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
+  const msg = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
     method: 'POST',
   }
   const request = https.request(options)
-  request.write(JSON.stringify(data))
+  request.write(JSON.stringify(msg))
   request.end()
   res.send({ status: 'Success', message: '推送成功' })
 })
