@@ -12,6 +12,7 @@ const router = express.Router()
 
 app.use(express.static('public'))
 app.use(express.json())
+dayjs.locale('zh-cn')
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -46,7 +47,6 @@ router.post('/pushMsg', async (req, res) => {
   if (!pushKey && !pushUrl)
     throw new Error('Push key not found in environment variables')
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  dayjs.locale('zh-cn')
   const date = dayjs().format('YYYY.MM.DD HH:mm:ss')
   const data = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
   const { hostname } = new url.URL(pushUrl)
