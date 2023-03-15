@@ -14,7 +14,6 @@ const router = express.Router()
 app.use(express.static('public'))
 app.use(express.json())
 dayjs.locale('zh-cn')
-globalThis.console.log(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
