@@ -2,8 +2,8 @@ import https from 'https'
 import url from 'url'
 import express from 'express'
 import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import 'dayjs/plugin/utc'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
 import { auth } from './middleware/auth'
@@ -13,8 +13,8 @@ const router = express.Router()
 
 app.use(express.static('public'))
 app.use(express.json())
-dayjs().locale('zh-cn')
-dayjs().utcOffset(8)
+dayjs.extend(utc)
+dayjs.extend(timezone)
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
@@ -48,7 +48,7 @@ router.post('/pushMsg', async (req, res) => {
   if (!pushKey && !pushUrl)
     throw new Error('Push key not found in environment variables')
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  const date = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  const date = dayjs().tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
   const msg = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
   const { hostname } = new url.URL(pushUrl)
   const options = {
