@@ -7,6 +7,7 @@ import timezone from 'dayjs/plugin/timezone'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
 import { auth } from './middleware/auth'
+import { isNotEmptyString } from './utils/is'
 
 const app = express()
 const router = express.Router()
@@ -74,7 +75,7 @@ router.post('/config', async (req, res) => {
 router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-    const hasAuth = typeof AUTH_SECRET_KEY === 'string' && AUTH_SECRET_KEY.length > 0
+    const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
     res.send({ status: 'Success', message: '', data: { auth: hasAuth } })
   }
   catch (error) {
