@@ -62,7 +62,7 @@ router.post('/pushMsg', async (req, res) => {
   res.send({ status: 'Success', message: '推送成功' })
 })
 
-router.post('/config', async (req, res) => {
+router.post('/config', auth, async (req, res) => {
   try {
     const response = await chatConfig()
     res.send(response)
