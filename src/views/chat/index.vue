@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -30,7 +31,7 @@ useCopyCode()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom } = useScroll()
+const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
@@ -40,6 +41,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+const inputRef = ref<Ref | null>(null)
 
 // 添加PromptStore
 const promptStore = usePromptStore()
@@ -119,7 +121,7 @@ async function onConversation() {
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
-          const lastIndex = responseText.lastIndexOf('\n')
+          const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
@@ -146,7 +148,7 @@ async function onConversation() {
               return fetchChatAPIOnce()
             }
 
-            scrollToBottom()
+            scrollToBottomIfAtBottom()
           }
           catch (error) {
           //
@@ -168,7 +170,7 @@ async function onConversation() {
           loading: false,
         },
       )
-      scrollToBottom()
+      scrollToBottomIfAtBottom()
       return
     }
 
@@ -200,7 +202,7 @@ async function onConversation() {
         requestOptions: { prompt: message, options: { ...options } },
       },
     )
-    scrollToBottom()
+    scrollToBottomIfAtBottom()
   }
   finally {
     loading.value = false
@@ -249,7 +251,7 @@ async function onRegenerate(index: number) {
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
-          const lastIndex = responseText.lastIndexOf('\n')
+          const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
@@ -456,6 +458,8 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   scrollToBottom()
+  if (inputRef.value)
+    inputRef.value?.focus()
 })
 
 onUnmounted(() => {
@@ -536,6 +540,7 @@ onUnmounted(() => {
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
+                ref="inputRef"
                 v-model:value="prompt"
                 type="textarea"
                 :placeholder="placeholder"
