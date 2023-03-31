@@ -113,7 +113,7 @@ async function onConversation() {
   try {
     let lastText = ''
     const fetchChatAPIOnce = async () => {
-      await fetchChatAPIProcess<Chat.ConversationResponse>({
+      const { data } = await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
         signal: controller.signal,
@@ -135,7 +135,7 @@ async function onConversation() {
                 text: lastText + data.text ?? '',
                 inversion: false,
                 error: false,
-                loading: false,
+                loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, options: { ...options } },
               },
@@ -155,6 +155,19 @@ async function onConversation() {
           }
         },
       })
+      updateChat(
+        +uuid,
+        dataSources.value.length - 1,
+        {
+          dateTime: new Date().toLocaleString(),
+          text: lastText + data.text ?? '',
+          inversion: false,
+          error: false,
+          loading: false,
+          conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+          requestOptions: { prompt: message, options: { ...options } },
+        },
+      )
     }
 
     await fetchChatAPIOnce()
@@ -243,7 +256,7 @@ async function onRegenerate(index: number) {
   try {
     let lastText = ''
     const fetchChatAPIOnce = async () => {
-      await fetchChatAPIProcess<Chat.ConversationResponse>({
+      const { data } = await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
         signal: controller.signal,
@@ -265,7 +278,7 @@ async function onRegenerate(index: number) {
                 text: lastText + data.text ?? '',
                 inversion: false,
                 error: false,
-                loading: false,
+                loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, ...options },
               },
@@ -283,6 +296,19 @@ async function onRegenerate(index: number) {
           }
         },
       })
+      updateChat(
+        +uuid,
+        index,
+        {
+          dateTime: new Date().toLocaleString(),
+          text: lastText + data.text ?? '',
+          inversion: false,
+          error: false,
+          loading: false,
+          conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+          requestOptions: { prompt: message, ...options },
+        },
+      )
     }
     await fetchChatAPIOnce()
   }
