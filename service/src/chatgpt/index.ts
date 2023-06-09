@@ -3,14 +3,12 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import httpsProxyAgent from 'https-proxy-agent'
+import HttpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
-
-const { HttpsProxyAgent } = httpsProxyAgent
 
 dotenv.config()
 
@@ -23,7 +21,7 @@ const ErrorCodeMessage: Record<string, string> = {
   500: '[OpenAI] 服务器繁忙，请稍后再试 | Internal Server Error',
 }
 
-const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 100 * 1000
+const timeoutMs: number = !Number.isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 100 * 1000
 const disableDebug: boolean = process.env.OPENAI_API_DISABLE_DEBUG === 'true'
 
 let apiModel: ApiModel
@@ -110,7 +108,7 @@ async function chatReplyProcess(options: RequestOptions) {
     return sendResponse({ type: 'Success', data: response })
   }
   catch (error: any) {
-    const code = error.statusCode
+    const code = error.statusCode// eslint-disable-next-line no-restricted-globals
     global.console.log(error)
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
@@ -152,7 +150,7 @@ async function fetchUsage() {
     const usage = Math.round(usageData.total_usage) / 100
     return Promise.resolve(usage ? `$${usage}` : '-')
   }
-  catch (error) {
+  catch (error) { // eslint-disable-next-line no-restricted-globals
     global.console.log(error)
     return Promise.resolve('-')
   }
@@ -196,6 +194,8 @@ function setupProxy(options: SetProxyOptions) {
   else if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
     const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
     if (httpsProxy) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const agent = new HttpsProxyAgent(httpsProxy)
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })

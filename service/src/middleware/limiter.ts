@@ -3,8 +3,8 @@ import { isNotEmptyString } from '../utils/is'
 
 const MAX_REQUEST_PER_HOUR = process.env.MAX_REQUEST_PER_HOUR
 
-const maxCount = (isNotEmptyString(MAX_REQUEST_PER_HOUR) && !isNaN(Number(MAX_REQUEST_PER_HOUR)))
-  ? parseInt(MAX_REQUEST_PER_HOUR)
+const maxCount = (isNotEmptyString(MAX_REQUEST_PER_HOUR) && !Number.isNaN(Number(MAX_REQUEST_PER_HOUR)))
+  ? Number.parseInt(MAX_REQUEST_PER_HOUR)
   : 0 // 0 means unlimited
 
 const limiter = rateLimit({
