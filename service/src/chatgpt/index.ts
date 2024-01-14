@@ -3,14 +3,14 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import httpsProxyAgent from 'https-proxy-agent'
+// import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
 
-const { HttpsProxyAgent } = httpsProxyAgent
+// const { HttpsProxyAgent } = httpsProxyAgent
 
 dotenv.config()
 
@@ -204,15 +204,15 @@ function setupProxy(options: SetProxyOptions) {
       return fetch(url, { agent, ...options })
     }
   }
-  else if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
-    const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
-    if (httpsProxy) {
-      const agent = new HttpsProxyAgent(httpsProxy)
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
-  }
+  // else if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
+  //   const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
+  //   if (httpsProxy) {
+  //     const agent = new HttpsProxyAgent(httpsProxy)
+  //     options.fetch = (url, options) => {
+  //       return fetch(url, { agent, ...options })
+  //     }
+  //   }
+  // }
   else {
     options.fetch = (url, options) => {
       return fetch(url, { ...options })
