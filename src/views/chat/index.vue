@@ -452,9 +452,10 @@ const getFile = () => {
 
 
 function extractMatches(text: string): string {
-	let regex = new RegExp("[\u4E00-\u9FA5A-Za-z0-9_]{1,50}", "g");
-	const matches = text.match(regex);
-	return matches ? matches.join('') : '';
+  let textBeforeDot = text.split('.')[0];
+  let regex = new RegExp("[\u4E00-\u9FA5A-Za-z0-9_]{1,50}", "g");
+  const matches = textBeforeDot.match(regex);
+  return matches ? matches.join('') : '';
 }
 
 const beforeUpload = (file: any) => {
