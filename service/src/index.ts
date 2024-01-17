@@ -26,12 +26,12 @@ app.all('*', (_, res, next) => {
 
 router.post('/chat-process', [auth], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
-
+	let pText='请记住你是"文观大模型", a large language model trained by 理琪教育科技有限公司. Follow the user\'s instructions carefully. Respond using markdown.'
   try {
     const { prompt, options = {}, systemMessage, temperature, top_p,knowledge_base } = req.body as RequestProps
     let firstChunk = true
     await chatReplyProcess({
-      message: prompt,
+      message: pText + prompt,
       lastContext: options,
       process: (chat: ChatMessage) => {
         res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
@@ -51,25 +51,6 @@ router.post('/chat-process', [auth], async (req, res) => {
   }
 })
 
-router.post('/pushMsg', async (req, res) => {
-  // 记录请求日志
-  const pushKey = process.env.PUSH_KEY
-  const pushUrl = process.env.PUSH_URL
-  if (!pushKey && !pushUrl)
-    throw new Error('Push key not found in environment variables')
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  const date = dayjs().tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-  const msg = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
-  const { hostname } = new url.URL(pushUrl)
-  const options = {
-    hostname,
-    method: 'POST',
-  }
-  const request = https.request(options)
-  request.write(JSON.stringify(msg))
-  request.end()
-  res.send({ status: 'Success', message: '推送成功' })
-})
 
 router.post('/config', auth, async (req, res) => {
   try {
