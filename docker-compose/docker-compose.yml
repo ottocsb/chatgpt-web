@@ -19,8 +19,6 @@ services:
       API_REVERSE_PROXY:
       # Access permission key, optional
       AUTH_SECRET_KEY:
-      # The maximum number of requests per hour, optional, default unlimited
-      MAX_REQUEST_PER_HOUR: 0
       # timeout in milliseconds, optional
       TIMEOUT_MS: 60000
       # Socks proxy, optional, works with SOCKS_PROXY_PORT

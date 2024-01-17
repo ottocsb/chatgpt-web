@@ -165,7 +165,6 @@ pnpm dev
 Common:
 
 - `AUTH_SECRET_KEY` Access permission key, optional
-- `MAX_REQUEST_PER_HOUR` Maximum number of requests per hour, optional, unlimited by default
 - `TIMEOUT_MS` Timeout, unit milliseconds, optional
 - `SOCKS_PROXY_HOST` and `SOCKS_PROXY_PORT` take effect together, optional
 - `SOCKS_PROXY_PORT` and `SOCKS_PROXY_HOST` take effect together, optional
@@ -221,8 +220,6 @@ services:
       API_REVERSE_PROXY: xxx
       # access permission key, optional
       AUTH_SECRET_KEY: xxx
-      # maximum number of requests per hour, optional, unlimited by default
-      MAX_REQUEST_PER_HOUR: 0
       # timeout, unit milliseconds, optional
       TIMEOUT_MS: 60000
       # Socks proxy, optional, take effect with SOCKS_PROXY_PORT
@@ -260,7 +257,6 @@ Fill in the following configuration in the nginx configuration file to prevent c
 | --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
 | `PORT`                | Required | Default `3002` |
 | `AUTH_SECRET_KEY`          | Optional | Access permission key                             |
-| `MAX_REQUEST_PER_HOUR`          | Optional | Maximum number of requests per hour, optional, unlimited by default                             |
 | `TIMEOUT_MS`          | Optional | Timeout, unit milliseconds                                                                    |
 | `OPENAI_API_KEY`      | `OpenAI API` choose one | `apiKey` required for `OpenAI API` [(get apiKey)](https://platform.openai.com/overview)           |
 | `OPENAI_ACCESS_TOKEN` | `Web API` choose one | `accessToken` required for `Web API` [(get accessToken)](https://chat.openai.com/api/auth/session) |
@@ -340,20 +336,7 @@ Thanks to everyone who has contributed!
   <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
 </a>
 
-## Sponsors
 
-If you find this project helpful and can afford it, you can give me a little support. Anyway, thanks for your support~
-
-<div style="display: flex; gap: 20px;">
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/wechat.png" alt="WeChat" />
-		<p>WeChat Pay</p>
-	</div>
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/alipay.png" alt="Alipay" />
-		<p>Alipay</p>
-	</div>
-</div>
 
 ## License
 MIT © [ChenZhaoYu]
