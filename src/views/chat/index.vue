@@ -417,7 +417,6 @@ const bcKey = 'Bearer sk-79a0acfc43a147b1e7e05a42f28f105d'
 
 let debounceTimer;
 
-
 const getFile = () => {
 	clearTimeout(debounceTimer);
 	debounceTimer = setTimeout(() => {
@@ -428,8 +427,14 @@ const getFile = () => {
 		}).then(res => {
 			console.log(res.data)
 			option.value = res.data.data.map((item: any) => {
-				if (item.status !== 'online') {
 
+				// 公司介绍知识库不可取消
+				if(item.id=='kb-P7d1519WzMO7izDXL0xmy1AN'){
+					return {
+						label: item.name,
+						value: item.id,
+						disabled: true
+					}
 				}
 
 				let status = item.status == 'online'
@@ -494,7 +499,8 @@ const onFinish = (res: any) => {
 }
 
 let option = ref([])
-let selected = ref()
+// 固定知识库为理琪公司介绍相关内容
+let selected = ref(['kb-P7d1519WzMO7izDXL0xmy1AN'])
 
 onMounted(() => {
 	scrollToBottom()
