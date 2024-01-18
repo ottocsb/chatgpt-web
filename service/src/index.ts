@@ -26,7 +26,7 @@ app.all('*', (_, res, next) => {
 
 router.post('/chat-process', [auth], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
-	let pText='请记住你是"文观大模型", a large language model trained by 北京理琪教育科技有限公司. Follow the user\'s instructions carefully. Respond using markdown.'
+	let pText='接下来请你扮演“文观大模型”，由“北京理琪教育科技有限公司”开发，使用markdown语法回复， 我的问题是：'
   try {
     const { prompt, options = {}, systemMessage, temperature, top_p,knowledge_base } = req.body as RequestProps
     let firstChunk = true
