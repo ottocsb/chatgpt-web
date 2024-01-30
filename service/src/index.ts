@@ -63,6 +63,7 @@ router.post('/pushMsg', async (req, res) => {
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
+    path: '/push/luck',
     method: 'POST',
   }
   const request = https.request(options)
