@@ -59,7 +59,7 @@ router.post('/pushMsg', async (req, res) => {
     throw new Error('Push key not found in environment variables')
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const date = dayjs().tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-  const msg = { key: pushKey, msg: `${req.body.msg}\n${date}\n${ip}` }
+  const msg = { token: pushKey, content: `${req.body.msg}\n${date}\n${ip}`,title: 'gpt推送',description:"date: "+date+" ip: "+ip}
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
