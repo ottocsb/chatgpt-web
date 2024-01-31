@@ -59,7 +59,13 @@ router.post('/pushMsg', async (req, res) => {
     throw new Error('Push key not found in environment variables')
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const date = dayjs().tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
-  const msg = { token: pushKey, content: `${req.body.msg}\n${date}\n${ip}`,title: 'chat推送',description:"又在偷窥了？"}
+	let desc: string
+	if(req.body.msg.length>10){
+		desc=req.body.msg.substring(0,10)+"..."
+	}else{
+		desc=req.body.msg
+	}
+  const msg = { token: pushKey, content: `${req.body.msg}\n${date}\n${ip}`,title: 'chat推送',description:desc}
   const { hostname } = new url.URL(pushUrl)
   const options = {
     hostname,
@@ -69,21 +75,20 @@ router.post('/pushMsg', async (req, res) => {
 			'Content-Type': 'application/json',
 		},
   }
-	console.log("推送内容：",msg)
+	let data: string
   const request = https.request(options, (res) => {
-		let data = ''
 		res.on('data', (chunk) => {
 			data += chunk
 		})
 		res.on('end', () => {
-			console.log("推送结果：",data)
+			console.log("推送内容and结果：\n"+msg+`\n`+data)
 		}
 	)
 
 	})
   request.write(JSON.stringify(msg))
   request.end()
-  res.send({ status: 'Success', message: '推送成功' })
+  res.send({ status: 'Success', message: data })
 })
 
 router.post('/config', auth, async (req, res) => {
