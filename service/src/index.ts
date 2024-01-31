@@ -69,13 +69,14 @@ router.post('/pushMsg', async (req, res) => {
 			'Content-Type': 'application/json',
 		},
   }
+	console.log("推送内容：",msg)
   const request = https.request(options, (res) => {
 		let data = ''
 		res.on('data', (chunk) => {
 			data += chunk
 		})
 		res.on('end', () => {
-			console.log(data)
+			console.log("推送结果：",data)
 		}
 	)
 
@@ -126,4 +127,4 @@ app.use('', router)
 app.use('/api', router)
 app.set('trust proxy', 1)
 
-app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
+app.listen(3002, () => globalThis.console.log('服务运行端口为：3002'))

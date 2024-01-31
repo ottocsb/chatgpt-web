@@ -110,7 +110,7 @@ devDependencies:
     specifier: ~5.3.3
     version: 5.3.3
   vite:
-    specifier: ^5.0.11
+    specifier: ^5.0.12
     version: 5.0.12(@types/node@18.19.10)(less@4.2.0)
   vite-plugin-pwa:
     specifier: ^0.17.4
